@@ -6,7 +6,7 @@ let Izumi = async (m, {
     await conn.sendButton(
         m.chat, {
             product: {
-                productImage: fs.readFileSync("./media/thumbnail2.jpg"),
+                productImage: 'https://raw.githubusercontent.com/Leoojonup/dat3/main/uploads/eadf39-1770263119337.jpg',
                 productId: '0',
                 title: ` ☘️ Script ${global?.botname}`,
                 description: `Script Gratis No Jual Ygy`,
