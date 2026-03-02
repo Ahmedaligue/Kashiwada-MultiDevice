@@ -18,16 +18,16 @@ let handler = async (m, {
         form.append("image", media, {
             filename: "remini-" + Date.now() + ".jpg",
             contentType: "image/jpeg"
-       });
+        });
 
         const { result: re } = await (await api.post('/tools/upscale', form, { headers: { ...form.getHeaders() } })).data;
-        const { data } = await axios.get(re.imageUrl, { responseType: "arraybuffer" })
-
+        
+        const size = Func.getSize(re?.imageUrl);
         await conn.sendMessage(m.chat, {
             image: {
                 url: re.imageUrl
             },
-            caption: ` 📷 Remini Gambar\n\n 🔗Url: ${re?.imageUrl || ""}\n ☘️Size: ${Func.formatSize(data.length) || ""}`
+            caption: ` 📷 Remini Gambar\n\n 🔗Url: ${re?.imageUrl || ""}\n ☘️Size: ${size || ""}`
         }, {
             quoted: m
         })

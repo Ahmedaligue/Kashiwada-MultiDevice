@@ -1,6 +1,8 @@
 import up from "@izumi/uploader";
 import api from "@izumi/api";
 import axios from "axios";
+import FormData from "form-data";
+const form = new FormData();
 
 export default async function hy(m, {
     conn
@@ -11,10 +13,12 @@ export default async function hy(m, {
         if (!/image/.test(mime)) return m.reply("⚠️ Masukan Gambar / Reply Gambar Buat Hytamkan");
 
         const media = await quoted.download();
-        const uguu = await up.uguu(media);
-        const tmp = uguu.files[0].url;
+        form.append("image", media, {
+            filename: "hytamkan-" + Date.now() + ".jpg",
+            contentType: "image/jpeg"
+        });
 
-        const { result: re } = await (await api.get('/ai-image/hytamkan?imageUrl=' + tmp)).data;
+        const { result: re } = await (await api.post('/image/hytamkan', form, { headers: { ...form.getHeaders() } })).data;
 
         await conn.sendMessage(m.chat, {
             image: {
