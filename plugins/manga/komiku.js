@@ -2,7 +2,7 @@ import sharp from "sharp";
 import {
     PDFDocument
 } from "pdf-lib";
-import api from "@izumi/api";
+import api from "#izumi/api";
 
 let oota = async (m, {
     conn,
