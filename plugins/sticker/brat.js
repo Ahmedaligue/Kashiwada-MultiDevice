@@ -1,5 +1,5 @@
 import axios from 'axios';
-import bu from '@library/sticker.js';
+import bu from '#library/sticker.js';
 
 let izuku = async (m, {
     conn,

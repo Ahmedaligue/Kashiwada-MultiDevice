@@ -3,7 +3,7 @@ import {
     createSticker,
     StickerTypes
 } from "wa-sticker-formatter";
-import up from "@izumi/uploader";
+import up from "#library/uploader.js";
 import axios from "axios";
 import fs from "fs";
 
