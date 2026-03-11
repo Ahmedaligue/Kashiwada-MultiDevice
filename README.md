@@ -1,6 +1,6 @@
 
 <p align="center">
-  <img src="https://qu.ax/bEhDy.jpg" width="250"/>
+  <img src="https://raw.githubusercontent.com/Leoojon/dat1/main/uploads/25eb4e-1767859162744.jpg" width="250"/>
 </p>
 
 <h1 align="center">Kashiwada-MultiDevice - WhatsApp Bot</h1>
