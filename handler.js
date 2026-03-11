@@ -56,6 +56,8 @@ export async function handler(chatUpdate) {
                     user.afk = -1
                 if (!('afkReason' in user))
                     user.afkReason = ''
+                if (!('profile' in user))
+                    user.profile = ''
                 if (!('warn' in user))
                     user.warn = 0
                 if (!('banned' in user))
@@ -75,6 +77,7 @@ export async function handler(chatUpdate) {
                     regTime: -1,
                     afk: -1,
                     afkReason: '',
+                    profile: '',
                     banned: false,
                     banReason: '',
                     warn: 0,
@@ -113,11 +116,13 @@ export async function handler(chatUpdate) {
             let settings = global.db.data.settings[this.user.jid]
             if (typeof settings !== 'object') global.db.data.settings[this.user.jid] = {}
             if (settings) {
+                if (!('onlygrup' in settings)) settings.onlygrup = true
                 if (!('self' in settings)) settings.self = false
                 if (!('resetlimit' in settings)) settings.resetlimit = moment.tz(global.tz).format("HH:mm")
                 if (!('autoleveling' in settings)) chat.autoleveling = false
                 if (!('restrict' in settings)) settings.restrict = true
             } else global.db.data.settings[this.user.jid] = {
+                onlygrup: true,
                 self: false,
                 resetlimit: moment.tz(global.tz).format("HH:mm"),
                 autoleveling: false,
@@ -138,6 +143,7 @@ export async function handler(chatUpdate) {
         let usedPrefix
         let _user = global.db.data && global.db.data.users && global.db.data.users[m.sender]
 
+        /*
         const mappedOwners = await Promise.all(
             owner.map(async num => {
                 const jid = `${num}@s.whatsapp.net`
@@ -165,9 +171,24 @@ export async function handler(chatUpdate) {
         const isRAdmin = user?.admin == 'superadmin' || false
         const isAdmin = isRAdmin || user?.admin == 'admin' || false // Is User Admin?
         const isBotAdmin = bot?.admin || false // Are you Admin"
+        */
+		const isROwner = [conn.decodeJid(global.conn.user.id), ...global.owner.map(number => number + '@s.whatsapp.net')].includes(m.sender);
+		const isOwner = isROwner || m.fromMe;
+		const isPrems = isROwner || db.data.users[m.sender]?.premium;
+        
+		const groupMetadata = (m.isGroup ? (conn.chats[m.chat] || {}).metadata || (await this.groupMetadata(m.chat).catch((_) => null)) : {}) || {};
+		const participants = (m.isGroup ? groupMetadata.participants : []) || [];
+		const user = (m.isGroup ? participants.find((u) => conn.getJid(u.id) === m.sender) : {}) || {}; // User Data
+		const bot = (m.isGroup ? participants.find((u) => conn.getJid(u.id) == this.user.jid) : {}) || {}; // Your Data
+		const isRAdmin = user?.admin == 'superadmin' || false;
+		const isAdmin = isRAdmin || user?.admin == 'admin' || false; // Is User Admin?
+		const isBotAdmin = bot?.admin || false; // Are you Admin
 
         if (!isOwner && db.data.settings[this.user.jid].self) return
         if (!isOwner && db.data.chats[m.chat].mute) return
+        
+        if (m.isBaileys) return;
+        /*
         const isBot = m?.id?.startsWith("3EB0") ||
             m?.id?.startsWith("FELZ") ||
             m?.id?.startsWith("F3FD") ||
@@ -178,6 +199,8 @@ export async function handler(chatUpdate) {
             m?.id?.indexOf("-") > 1;
         if (isBot) return
 
+        */
+        
         // Variabel kontrol reset
         let isResetting = false
         let lastResetTime = 0
@@ -319,6 +342,15 @@ export async function handler(chatUpdate) {
                     if (name != 'owner-unbanchat.js' && name != 'owner-exec.js' && name != 'owner-exec2.js' && name != 'tool-delete.js' && chat?.isBanned) return // Except this
                     if (name != 'owner-unbanuser.js' && user?.banned) return
                 }
+                if (
+                    db.data.settings[this.user.jid].onlygrup &&
+                    usedPrefix &&
+                    command &&
+                    !m.isGroup &&
+                    !isOwner
+                ) {
+                    return m.reply(`⚠️ Command hanya bisa digunakan di dalam grup!\n\n🔗Link_Group: ${linkgc}\n📝Notes: Takut No bot nya kena batasan :v`)
+                }
                 if (plugin.rowner && plugin.owner && !(isROwner || isOwner)) { // Both Owner
                     fail('owner', m, this)
                     continue
@@ -395,23 +427,17 @@ export async function handler(chatUpdate) {
                             let usersli = db.data.users[m.sender]
                             if (usersli.limit > plugin.limit) {
                                 usersli.limit -= plugin.limit
-                                conn.reply(
-                                    m.chat,
-                                    `> 🍀 Kashiwada: Limit Mu Tinggal: ${usersli.limit}\n> 💢 Oota: LAIN KALI JANGAN BOROS\n> 🍀 Kashiwada: Oota-kun, Jangan Marah Marah lah lagian, cuman limit doang....`,
-                                    m
+                                m.reply(
+                                    `ʟɪᴍɪᴛ ᴀɴᴅᴀ: ${usersli.limit}, ᴊᴀɴɢᴀɴ ᴛᴇʀʟᴀʟᴜ ʙᴏʀᴏs`
                                 )
                                 if (usersli.limit === plugin.limit) {
-                                    conn.reply(
-                                        m.chat,
-                                        `> 🍞 Oota-kun: Kan Limit Mu: ${usersli.limit},\n> 🍀 Kashiwada: Yaudahlah Limit Mu Dikit Nunggu Riset Jam: 2:00`,
-                                        m
+                                    m.reply(
+                                        `ʟɪᴍɪᴛ ᴀɴᴅᴀ: ${usersli.limit}, ᴊᴀɴɢᴀɴ sᴀᴍᴘᴇ ᴀʙɪs`
                                     )
                                 }
                             } else {
-                                conn.reply(
-                                    m.chat,
-                                    `> 🍀 Kashiwada: Yaah Limit Mu Habis...\n> 💢 Oota: Mangka Nya Jangan Boros Sayang Tuh Limit`,
-                                    m
+                                m.reply(
+                                    `ʟɪᴍɪᴛ ᴀɴᴅᴀ sᴜᴅᴀʜ, ʜᴀʙɪs ᴊᴀᴅɪ ɴᴜɴɢɢᴜ ʀɪsᴇᴛ`
                                 )
                             }
                         }
@@ -533,8 +559,8 @@ export async function participantsUpdate({
 
                     } catch (e) {} finally {
                         text = (action === 'add' ?
-                            (chat.sWelcome || this.welcome || conn.welcome || 'Welcome, @user!').replace('@subject', await this.getName(id)).replace('@desc', groupMetadata.desc?.toString() || 'unknown') :
-                            (chat.sBye || this.bye || conn.bye || 'Bye, @user!')).replace('@user', `@` + seni.split('@')[0])
+                            (chat.sWelcome || this.welcome || conn.welcome || 'Welcome, %user!').replace(/%subject/g, await this.getName(id)).replace(/%desc/g, groupMetadata.desc?.toString() || 'unknown').replace(/%user/g, `@` + seni.split('@')[0]) :
+                            (chat.sBye || this.bye || conn.bye || 'Bye, %user!')).replace(/%user/g, `@` + seni.split('@')[0])
                         let wel = await new knights.Welcome2()
                             .setAvatar(pp)
                             .setUsername(await this?.getName(seni) || "Gada Nama")

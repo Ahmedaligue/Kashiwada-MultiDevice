@@ -16,7 +16,7 @@
  
 process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = 0
 
-import './config.js'
+import './lib/global.js'
 
 import path, { join } from 'path'
 import pino from 'pino'
@@ -27,6 +27,7 @@ import { platform } from 'process'
 import { fileURLToPath, pathToFileURL } from 'url'
 import { createRequire } from 'module' // Bring in the ability to create the 'require' method
 import fs from 'fs'
+import useSQLiteAuth from './lib/useSQLite.js';
 const {
   readdirSync,
   statSync,
@@ -40,7 +41,7 @@ import { spawn, exec } from 'child_process'
 import { tmpdir } from 'os'
 import { format, promisify } from 'util'
 import { Boom } from "@hapi/boom";
-const { useMultiFileAuthState, DisconnectReason, fetchLatestBaileysVersion, fetchLatestWaWebVersion, Browsers, makeCacheableSignalKeyStore, } = await import('@adiwajshing/baileys')
+const { useMultiFileAuthState, DisconnectReason, fetchLatestBaileysVersion, fetchLatestWaWebVersion, Browsers, makeCacheableSignalKeyStore, } = await import('baileys')
 import { Low, JSONFile } from 'lowdb'
 import { makeWASocket, protoType, serialize } from './lib/simple.js'
 const run = promisify(exec);
@@ -82,7 +83,7 @@ global.loadDatabase = async function loadDatabase() {
 loadDatabase()
 
 const { version } = await fetchLatestBaileysVersion()
-const { state, saveCreds } = await useMultiFileAuthState('./sessions')
+const { state, saveCreds } = await useSQLiteAuth('./sessions')
 const connectionOptions = {
 	auth: {
 		creds: state.creds,
@@ -104,53 +105,15 @@ const connectionOptions = {
 global.conn = makeWASocket(connectionOptions)
 conn.isInit = false
 
-async function downloadBinary() {
+if (fs.existsSync(`./sessions/creds.json`) && !conn.authState.creds.registered) {
+  conn.logger.warn("Session rusak, membersihkan folder sessions...");
+
   try {
-    await run('curl -L https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp -o yt-dlp');
-    await run('chmod +x yt-dlp');
-    conn.logger.info('✅ yt-dlp binary downloaded! Run with ./yt-dlp');
-  } catch (err) {
-    conn.logger.error('❌ Error:', err.stderr || err.message);
+    fs.rmSync("./sessions", { recursive: true, force: true });
+    fs.mkdirSync("./sessions");
+  } catch (e) {
+    console.error("Gagal reset session:", e);
   }
-}
-
-await downloadBinary();
-
-if(global.db) {
-   setInterval(async () => {
-    if(global.db.data) await global.db.write().catch(console.error);
-    if(global.support?.find) {
-      const tmp = [tmpdir(), 'tmp'];
-      tmp.forEach(filename => spawn('find', [filename, '-amin', '3', '-type', 'f', '-delete']));
-    }
-  }, 60000);
-}
-
-const tmp = (data = "") => fs.writeFileSync("/tmp/huh.txt", data);
-
-setInterval(async () => {
-  await tmp()
-}, 1) 
-
-setInterval(() => {
-  fs.readdir(`sessions`, async function (err, files) {
-    if (err) {
-      console.log('Unable to scan directory\n' + err);
-    }
-    const list = ["pre-key", "sender-key", "session-"];
-    
-    let filter = await files.filter(item => list.some(type => item.startsWith(type)));
-    if(filter.length == 0) return
-    await filter.forEach(function (file) {
-      fs.unlinkSync(`./sessions/${file}`)
-    });
-    process.send("reset")
-  });
-}, 130 * 60 * 1000) // 3 jam
-
-if(existsSync('./sessions/creds.json') && !conn.authState.creds.registered) {
-  conn.logger.warn('Maaf File Sessions Error!, Tolong Di Hapus File Sessions Nya');
-  process.exit(0);
 }
 
 async function connectionUpdate(update) {
@@ -168,7 +131,7 @@ async function connectionUpdate(update) {
 if (!conn.authState.creds.registered) {
     console.log(chalk.bgWhite(chalk.blue('Generating code...')))
     setTimeout(async () => {
-        let code = await conn.requestPairingCode(global.nomor, global.costumpairing)
+        let code = await conn.requestPairingCode(global.nomor, global.pairing)
         code = code?.match(/.{1,4}/g)?.join('-') || code
         conn.logger.info(`Code Pairing Anda: ${code}`)
     }, 3000)
@@ -248,14 +211,14 @@ global.reloadHandler = async function (restatConn) {
     conn.ev.off('creds.update', conn.credsUpdate)
   }
 
-  conn.welcome = 'Welcome @user!\n\nIntro Dulu Lek Ga Intro Admin Mana Kenal :3\n\n╭──🌸→ [ Intro ]\n│ Nama: \n│ Gender: \n│ Hobi: \n│ Umur: \n│ Kelas: \n│ Askot: \n╰──────────────────→'
-  conn.bye = 'Sayonara @user🥲'
-  conn.spromote = '@user Sekarang jadi admin!'
-  conn.sdemote = '@user Sekarang bukan lagi admin!'
-  conn.sDesc = 'Deskripsi telah diubah menjadi \n@desc'
-  conn.sSubject = 'Judul grup telah diubah menjadi \n@subject'
+  conn.welcome = 'Welcome %user!\n\nIntro Dulu Lek Ga Intro Admin Mana Kenal :3\n\n╭──🌸→ [ Intro ]\n│ Nama: \n│ Gender: \n│ Hobi: \n│ Umur: \n│ Kelas: \n│ Askot: \n╰──────────────────→'
+  conn.bye = 'Sayonara %user🥲'
+  conn.spromote = '%user Sekarang jadi admin!'
+  conn.sdemote = '%user Sekarang bukan lagi admin!'
+  conn.sDesc = 'Deskripsi telah diubah menjadi \n%desc'
+  conn.sSubject = 'Judul grup telah diubah menjadi \n%subject'
   conn.sIcon = 'Icon grup telah diubah!'
-  conn.sRevoke = 'Link group telah diubah ke \n@revoke'
+  conn.sRevoke = 'Link group telah diubah ke \n%revoke'
   conn.sAnnounceOn = 'Group telah di tutup!\nsekarang hanya admin yang dapat mengirim pesan.'
   conn.sAnnounceOff = 'Group telah di buka!\nsekarang semua peserta dapat mengirim pesan.'
   conn.sRestrictOn = 'Edit Info Grup di ubah ke hanya admin!'

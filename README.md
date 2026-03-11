@@ -1,6 +1,6 @@
 
 <p align="center">
-  <img src="https://raw.githubusercontent.com/LeoojonAll/dat3/main/uploads/b6dc19-1767263337070.jpg" width="250"/>
+  <img src="https://qu.ax/bEhDy.jpg" width="250"/>
 </p>
 
 <h1 align="center">Kashiwada-MultiDevice - WhatsApp Bot</h1>
@@ -32,16 +32,13 @@
 ## ⚙️ nama config.expired.js ganti ke config.js
 ## ⚙️ nama database.expired.js ganti ke database.json
 
-## ⚙️ Kalo Uploader Yang Github Kalian Gabisa Harus Memiliki Token
+## ⚙️ Kalo Play Sama Fitur Downloader YouTube Ku Saranin Vps Nya Legal Atau Bagus Kalo Do Gini
 ```tutorial
-1. ambil nama owner buat repo buat cadangan atau apa
-2. ambil token di https://github.com/settings/tokens/new
-3. centang list semua terus Masukin Ke Sini
-
-global.git = {
-  owner: ["Your_Name_Github"],
-  token: ["Your_Token"]
-}
+1. Download Firefox atau Browser Lain
+2. Download Extension get cookies.txt Locally
+3. login akun yt mu di browser https://m.youtube.com
+4. Buka Extension get cookies.txt Locally, pencet copy
+5. Taro Di file cookies.txt tadi
 
 Selamat Mencoba Ingat Jangan Malas Yang Malas Atur Sendiri😒
 ```

@@ -1,0 +1,26 @@
+{
+    "botname": "Kashiwada-MultiDevice",
+    "link": {
+        "group": "https://chat.whatsapp.com/JyeT1hdCPJeLy95tzx5eyI",
+        "saluran": "https://whatsapp.com/channel/0029VbAQBR6CxoAow9hLZ13Z"
+    },
+    "id": {
+        "saluran": "120363423286058962@newsletter",
+        "group": ""
+    },
+    "ownername": "Keigo / izuku_mii",
+    "owner": ["Your_Number"],
+    "thumbnailUrl": "https://f.top4top.io/p_3717gqxr51.jpg",
+    "audioUrl": "https://h.top4top.io/m_3622t3r7l1.mp3",
+    "pairing": "izukumii",
+    "nomor": "628_Number-Bot",
+    "tz": "Asia/Jakarta",
+    "git": {
+        "name": ["Your_owner"],
+        "token": ["Your_token"]
+    },
+    "apikey": {
+        "izumi": "https://api.ootaizumi.web.id"
+    },
+    "web": "https://api.ootaizumi.web.id/"
+}
