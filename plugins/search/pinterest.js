@@ -1,4 +1,4 @@
-import api from "@izumi/api";
+import api from "#izumi/api";
 
 export default async function oota(m, {
     conn,
