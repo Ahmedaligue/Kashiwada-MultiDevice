@@ -349,7 +349,7 @@ export async function handler(chatUpdate) {
                     !m.isGroup &&
                     !isOwner
                 ) {
-                    return m.reply(`⚠️ Command hanya bisa digunakan di dalam grup!\n\n🔗Link_Group: ${linkgc}\n📝Notes: Takut No bot nya kena batasan :v`)
+                    return m.reply(`⚠️ Command hanya bisa digunakan di dalam grup!\n\n🔗Link_Group: ${link.group}\n📝Notes: Takut No bot nya kena batasan :v`)
                 }
                 if (plugin.rowner && plugin.owner && !(isROwner || isOwner)) { // Both Owner
                     fail('owner', m, this)
