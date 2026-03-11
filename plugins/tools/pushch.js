@@ -1,5 +1,5 @@
-import convert from "@library/toAll.js";
-import stickerr from "@library/sticker.js";
+import convert from "#library/toAll.js";
+import stickerr from "#library/sticker.js";
 
 export default async function oota(m, {
     conn,

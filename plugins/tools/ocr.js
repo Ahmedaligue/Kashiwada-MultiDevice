@@ -1,5 +1,4 @@
-import up from "@izumi/uploader";
-import api from "@izumi/api";
+import api from "#izumi/api";
 
 let oota = async (m, {
     text
@@ -9,17 +8,8 @@ let oota = async (m, {
         const mime = (quoted.msg || quoted || {}).mimetype || "";
         if (!/image/.test(mime)) return m.reply("⚠️Masukan Gambar Buat Copy Text Di Gambar!");
         const media = await quoted.download();
-        const uguu = await up.uguu(media);
-        const tmp = uguu.files[0].url;
-
-        const {
-            result
-        } = await (await api.get('/tools/ocr', {
-            params: {
-                imageUrl: tmp
-            }
-        })).data;
-
+        const { result: re } = await (await api.uploadEnd('/tools/ocr', { type: "image", buffer: media, mimetype: "image/jpeg" })).data;
+        
         await m.reply(result);
     } catch (e) {
         m.reply("❌ Gomene Error Mungkin lu kebanyakan request");

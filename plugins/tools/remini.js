@@ -1,8 +1,4 @@
-import up from "@izumi/uploader";
-import api from "@izumi/api";
-import axios from "axios";
-import FormData from "form-data";
-const form = new FormData();
+import api from "#izumi/api";
 
 let handler = async (m, {
     conn,
@@ -15,14 +11,9 @@ let handler = async (m, {
 
         if (!/image/.test(mime)) return m.reply(`⚠️ Reply Gambar / Kirim Gambar Caption Buat ${usedPrefix + command}`);
         const media = await q.download();
-        form.append("image", media, {
-            filename: "remini-" + Date.now() + ".jpg",
-            contentType: "image/jpeg"
-        });
-
-        const { result: re } = await (await api.post('/tools/upscale', form, { headers: { ...form.getHeaders() } })).data;
+        const { result: re } = await (await api.uploadEnd('/tools/upscale', { type: "image", buffer: media, mimetype: "image/jpeg" })).data;
         
-        const size = Func.getSize(re?.imageUrl);
+        const size = await Func.getSize(re?.imageUrl);
         await conn.sendMessage(m.chat, {
             image: {
                 url: re.imageUrl

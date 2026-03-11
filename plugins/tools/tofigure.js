@@ -1,6 +1,4 @@
-import up from "@izumi/uploader";
-import api from "@izumi/api";
-import axios from "axios";
+import api from "#izumi/api";
 
 export default async function fi(m, {
     conn

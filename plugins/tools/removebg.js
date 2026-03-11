@@ -1,9 +1,5 @@
-import up from "@izumi/uploader";
-import api from "@izumi/api";
-import axios from "axios";
-import FormData from "form-data";
-const form = new FormData();
-        
+import api from "#izumi/api";
+
 let handler = async (m, {
     conn,
     usedPrefix,
@@ -16,13 +12,8 @@ let handler = async (m, {
         if (!/image/.test(mime)) return m.reply(`⚠️ Reply Gambar / Kirim Gambar Caption Buat ${usedPrefix + command}`);
 
         const media = await q.download();
-        form.append("image", media, {
-            filename: "removebg-" + Date.now() + ".jpg",
-            contentType: "image/jpeg"
-        });
-
-        const { result: re } = await (await api.post('/tools/removebg', form, { headers: { ...form.getHeaders() } })).data;
-
+        const { result: re } = await (await api.uploadEnd('/tools/removebg', { type: "image", buffer: media, mimetype: "image/jpeg" })).data;
+        
         await conn.sendMessage(m.chat, {
             image: {
                 url: re

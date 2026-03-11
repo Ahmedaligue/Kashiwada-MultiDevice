@@ -1,5 +1,5 @@
 import but from "baileys_helper";
-import up from "@izumi/uploader";
+import up from "#izumi/uploader";
 
 let izuku = async (m, { conn }) => {
     try {
