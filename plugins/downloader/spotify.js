@@ -1,6 +1,6 @@
 import axios from 'axios';
 import canvafy from 'canvafy';
-import api from "@izumi/api";
+import api from "#izumi/api";
 
 let handler = async (m, {
     conn,

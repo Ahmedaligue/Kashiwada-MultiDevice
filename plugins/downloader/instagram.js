@@ -1,5 +1,5 @@
 let old = new Date()
-import api from "@izumi/api";
+import api from "#izumi/api";
 import axios from "axios";
 
 export default async function izuku(m, {

@@ -1,6 +1,6 @@
 let old = new Date();
-import convert from "@library/toAll.js";
-import api from "@izumi/api";
+import convert from "#library/toAll.js";
+import api from "#izumi/api";
 
 function isUrl(v) {
     return typeof v === "string" && /^https?:\/\//.test(v);
