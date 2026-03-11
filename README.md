@@ -29,19 +29,7 @@
 
 ---
 
-## ⚙️ nama config.expired.js ganti ke config.js
 ## ⚙️ nama database.expired.js ganti ke database.json
-
-## ⚙️ Kalo Play Sama Fitur Downloader YouTube Ku Saranin Vps Nya Legal Atau Bagus Kalo Do Gini
-```tutorial
-1. Download Firefox atau Browser Lain
-2. Download Extension get cookies.txt Locally
-3. login akun yt mu di browser https://m.youtube.com
-4. Buka Extension get cookies.txt Locally, pencet copy
-5. Taro Di file cookies.txt tadi
-
-Selamat Mencoba Ingat Jangan Malas Yang Malas Atur Sendiri😒
-```
 
 ## 🌐 Example Plugin File
 ## 🧠 Example Plugin (No Regex)
