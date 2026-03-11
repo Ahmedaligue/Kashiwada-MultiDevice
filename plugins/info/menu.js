@@ -5,7 +5,7 @@ import {
     fileURLToPath
 } from 'url';
 let num = "13135550002@s.whatsapp.net";
-import convert from "@library/toAll.js";
+import convert from "#library/toAll.js";
 import axios from "axios";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -114,7 +114,7 @@ ${helpList}
  乂  *S T A T I S T I C*  🌸
  
  ┌ ◦ ʙᴏᴛᴛᴏ ɴᴏ ᴋɪɴᴏ̄ ᴏ ʜʏᴏ̄ᴊɪ: *.ᴍᴇɴᴜ ᴀʟʟ*
- └ ◦ ᴍᴇɴʏᴜ̄ʀɪsᴜᴛᴏ ɴᴏ ʜʏᴏ̄ᴊɪ: *.ᴍᴇɴᴜ ʟɪsᴛ*`;
+└ ◦ ᴍᴇɴʏᴜ̄ʀɪsᴜᴛᴏ ɴᴏ ʜʏᴏ̄ᴊɪ: *.ᴍᴇɴᴜ ʟɪsᴛ*`;
 
     const teksdx = `エラーを見つけた場合、またはプレミアム プランをアップグレードしたい場合は、所有者に連絡してください。 🌸`;
 
@@ -307,7 +307,7 @@ function getVpsSpecs() {
  . . ┊⿻ [ *ғʀᴇᴇ ʀᴀᴍ* :: ${freeMem} GB] . .
  . . ┊⿻ [ *sᴘᴇᴇᴅ* :: ${cpuSpeed} MHz]. . 
  . . ┊⿻ [ *ᴄᴏʀᴇs* :: ${cpuCores}]. . 
- . . ┊⿻ [ *ʟɪʙʀᴀʀʏ* :: baileys]. . 
+ . . ┊⿻ [ *ʟɪʙʀᴀʀʏ* :: @adiwajshing/baileys]. . 
  . . ┊⿻ [ *ᴄʀᴇᴀᴛᴏʀ* :: ${global?.ownername}]. . 
  . . ╰─────────╮`.trim();
 }
