@@ -31,7 +31,7 @@
     "imports": {
         "#izumi/api": "./lib/api.js",
         "#izumi/uploader": "./lib/uploader.js",
-        "#izumi/*": "./lib/*"
+        "#library/*": "./lib/*"
     },
     "dependencies": {
         "@bochilteam/scraper": "^5.0.1",
@@ -76,6 +76,7 @@
         "node-webpmux": "^3.2.0",
         "p-queue": "^9.0.0",
         "pino": "^10.1.0",
+        "pdf-lib": "latest",
         "pino-pretty": "^13.1.2",
         "sharp": "^0.32.6",
         "similarity": "^1.2.1",
