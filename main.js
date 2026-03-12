@@ -56,47 +56,62 @@ global.opts = new Object(yargs(process.argv.slice(2)).exitProcess(false).parse()
 global.__filename = function filename(pathURL = import.meta.url, rmPrefix = platform !== 'win32') { return rmPrefix ? /file:\/\/\//.test(pathURL) ? fileURLToPath(pathURL) : pathURL : pathToFileURL(pathURL).toString() }; global.__dirname = function dirname(pathURL) { return path.dirname(global.__filename(pathURL, true)) }; global.__require = function require(dir = import.meta.url) { return createRequire(dir) }
 const __dirname = global.__dirname(import.meta.url)
 
-global.prefix = new RegExp('^[' + 
-    ('\\/!#.\\-:;+$%?&*~' + 
-     '\\/!π^#.\\-:;+$%?&*~' + 
-     '1234567890qwertyuiopasdfghjkl' + 
-     'zxcvbnm,./;\'\\[]\\|').replace(/[|\\{}[\]()^$+*?.-]/g, '\\$&') + ']');
+global.prefix = new RegExp('^[' + '‎xzXZ/i!#$%+£¢€¥^°=¶∆×÷π√✓©®:;?&.\\-'.replace(/[|\\{}()[\]^$+*?.\-\^]/g, '\\$&') + ']')
 
-// Database setup
-global.db = { sqlite: null, data: null };
+if (!fs.existsSync('./data')) {
+  fs.mkdirSync('./data', { recursive: true })
+}
 
-global.loadDatabase = function() {
-    if (!global.db.sqlite) {
-        const dbPath = path.join(process.cwd(), './data/database.db');
-        fs.mkdirSync(path.dirname(dbPath), { recursive: true });
-        global.db.sqlite = new Database(dbPath);
-        global.db.sqlite.pragma('journal_mode = WAL');
-        global.db.sqlite.pragma('synchronous = NORMAL');
-        global.db.sqlite.pragma('foreign_keys = ON');
-        global.db.sqlite.exec(
-            'CREATE TABLE IF NOT EXISTS data (id INTEGER PRIMARY KEY AUTOINCREMENT, data TEXT)'
-        );
-    }
-    
-    if (global.db.data === null) return;
-    
-    global.db.data = { users: {}, chats: {}, stats: {}, msgs: {}, sticker: {}, settings: {} };
-    
-    const result = global.db.sqlite.prepare('SELECT data FROM data WHERE id = 1').get();
-    
-    if (result?.data) {
-        try {
-            Object.assign(global.db.data, JSON.parse(result.data));
-        } catch {
-            console.log('[DB] JSON corrupted, using default');
-        }
-    } else {
-        global.db.sqlite.prepare('INSERT OR IGNORE INTO data (id, data) VALUES (1, ?)')
-            .run(JSON.stringify(global.db.data));
-    }
-};
+if (!fs.existsSync('./data/db.json')) {
+  fs.writeFileSync('./data/db.json', JSON.stringify({
+    users: {},
+    chats: {},
+    stats: {},
+    msgs: {},
+    sticker: {},
+    settings: {}
+  }, null, 2))
+}
 
-loadDatabase();
+global.prefix = new RegExp('^[' + '‎xzXZ/i!#$%+£¢€¥^°=¶∆×÷π√✓©®:;?&.\\-'.replace(/[|\\{}()[\]^$+*?.\-\^]/g, '\\$&') + ']')
+
+global.db = new Low(new JSONFile('./data/db.json'))
+
+global.loadDatabase = async function loadDatabase() {
+  if (global.db.READ) {
+    return new Promise((resolve) => setInterval(() => {
+      if (!global.db.READ) {
+        clearInterval(this)
+        resolve(global.db.data == null ? global.loadDatabase() : global.db.data)
+      }
+    }, 1000))
+  }
+
+  if (global.db.data !== null) return
+
+  global.db.READ = true
+  await global.db.read().catch(console.error)
+  global.db.READ = null
+
+  global.db.data = {
+    users: {},
+    chats: {},
+    stats: {},
+    msgs: {},
+    sticker: {},
+    settings: {},
+    ...(global.db.data || {})
+  }
+
+  await global.db.write()
+}
+
+await global.loadDatabase()
+
+// auto save
+setInterval(async () => {
+  if (global.db?.data) await global.db.write()
+}, 30000)
 
 const { version } = await fetchLatestBaileysVersion()
 const { state, saveCreds } = await useSQLiteAuth('./sessions')
@@ -331,19 +346,3 @@ async function _quickTest() {
 }
 
 _quickTest().then(() => conn.logger.info('☑️ Quick Test Done , nama file session ~> creds.json')).catch(console.error);
-
-// Close database handler
-function closeDB() {
-    try {
-        global.db.sqlite.close();
-        console.log('Database closed');
-    } catch (e) {
-        console.log(e);
-    }
-}
-
-// Process event handlers
-process.on('uncaughtException', console.log);
-process.on('exit', closeDB);
-process.on('SIGINT', closeDB);
-process.on('SIGTERM', closeDB);
