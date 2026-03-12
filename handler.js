@@ -14,7 +14,7 @@
  * @COPYRIGHT   © 2025 IZUKU-MII | All Rights Free.
  */
 
-import { smsg } from './lib/simple.js'
+import { smsg } from '#library/simple.js'
 import { format } from 'util'
 import { fileURLToPath } from 'url'
 import path from 'path'
@@ -116,13 +116,13 @@ export async function handler(chatUpdate) {
             let settings = global.db.data.settings[this.user.jid]
             if (typeof settings !== 'object') global.db.data.settings[this.user.jid] = {}
             if (settings) {
-                if (!('onlygrup' in settings)) settings.onlygrup = true
+                if (!('onlygrup' in settings)) settings.onlygrup = false
                 if (!('self' in settings)) settings.self = false
                 if (!('resetlimit' in settings)) settings.resetlimit = moment.tz(global.tz).format("HH:mm")
                 if (!('autoleveling' in settings)) chat.autoleveling = false
                 if (!('restrict' in settings)) settings.restrict = true
             } else global.db.data.settings[this.user.jid] = {
-                onlygrup: true,
+                onlygrup: false,
                 self: false,
                 resetlimit: moment.tz(global.tz).format("HH:mm"),
                 autoleveling: false,
