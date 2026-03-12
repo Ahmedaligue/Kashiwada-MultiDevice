@@ -1,6 +1,6 @@
 {
-    "name": "Kashiwada-san",
-    "version": "2.0.0",
+    "name": "Kashiwada-MultiDevice",
+    "version": "2.1.0",
     "description": "BOT Whatsapp",
     "main": "index.js",
     "type": "module",
@@ -18,14 +18,14 @@
         "baileys-md",
         "multi-device"
     ],
-    "homepage": "https://github.com/ShirokamiRyzen/Nao-MD",
-    "author": "Izumi/Oota",
+    "homepage": "https://github.com/izuku-mii/Kashiwada-MultiDevice",
+    "author": "izuku-mii/Keigo",
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/ShirokamiRyzen/Nao-MD.git"
+        "url": "git+https://github.com/izuku-mii/Kashiwada-MultiDevice.git"
     },
     "bugs": {
-        "url": "https://github.com/ShirokamiRyzen/Nao-MD/issues"
+        "url": "https://github.com/izuku-mii/Kashiwada-MultiDevice/issues"
     },
     "license": "GPL-3.0-or-later",
     "imports": {
