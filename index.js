@@ -14,7 +14,7 @@
  * @COPYRIGHT   © 2025 IZUKU-MII | All Rights Free.
  */
 
-import '#library/config.js';
+import '#library/global.js';
 import { fileURLToPath } from 'url';
 import { join, dirname } from 'path';
 import { createRequire } from 'module';
