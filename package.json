@@ -34,12 +34,7 @@
         "#library/*": "./lib/*"
     },
     "dependencies": {
-        "@bochilteam/scraper": "^5.0.1",
-        "@distube/ytdl-core": "^4.16.12",
-        "@ibaraki-douji/pixivts": "^2.4.1",
         "@cacheable/node-cache": "latest",
-        "@viper-x/fancytext": "^1.0.2",
-        "@vitalets/google-translate-api": "^9.2.0",
         "async-mutex": "^0.5.0",
         "awesome-phonenumber": "^5.11.0",
         "axios": "^1.4.0",
