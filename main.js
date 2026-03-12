@@ -16,7 +16,7 @@
  
 process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = 0
 
-import './lib/global.js'
+import '#library/global.js'
 
 import path, { join } from 'path'
 import pino from 'pino'
@@ -27,7 +27,7 @@ import { platform } from 'process'
 import { fileURLToPath, pathToFileURL } from 'url'
 import { createRequire } from 'module' // Bring in the ability to create the 'require' method
 import fs from 'fs'
-import useSQLiteAuth from './lib/useSQLite.js';
+import useSQLiteAuth from '#library/useSQLite.js';
 const {
   readdirSync,
   statSync,
@@ -43,7 +43,7 @@ import { format, promisify } from 'util'
 import { Boom } from "@hapi/boom";
 const { useMultiFileAuthState, DisconnectReason, fetchLatestBaileysVersion, fetchLatestWaWebVersion, Browsers, makeCacheableSignalKeyStore, } = await import('baileys')
 import { Low, JSONFile } from 'lowdb'
-import { makeWASocket, protoType, serialize } from './lib/simple.js'
+import { makeWASocket, protoType, serialize } from '#library/simple.js'
 const run = promisify(exec);
 
 const { CONNECTING } = ws
@@ -105,14 +105,17 @@ const connectionOptions = {
 global.conn = makeWASocket(connectionOptions)
 conn.isInit = false
 
-if (fs.existsSync(`./sessions/creds.json`) && !conn.authState.creds.registered) {
-  conn.logger.warn("Session rusak, membersihkan folder sessions...");
-
+if (!conn.authState.creds.registered) {
   try {
-    fs.rmSync("./sessions", { recursive: true, force: true });
-    fs.mkdirSync("./sessions");
+    setTimeout(async () => {
+        let code = await conn.requestPairingCode(global.nomor, global.pairing)
+        code = code?.match(/.{1,4}/g)?.join('-') || code
+        conn.logger.info(`Code Pairing Anda: ${code}`)
+    }, 3000)
   } catch (e) {
-    console.error("Gagal reset session:", e);
+	console.error(e)
+	fs.rmSync("./sessions", { recursive: true, force: true });
+    process.exit(1)
   }
 }
 
@@ -128,14 +131,6 @@ async function connectionUpdate(update) {
     // console.log(JSON.stringify(update, null, 4))
 }
 
-if (!conn.authState.creds.registered) {
-    console.log(chalk.bgWhite(chalk.blue('Generating code...')))
-    setTimeout(async () => {
-        let code = await conn.requestPairingCode(global.nomor, global.pairing)
-        code = code?.match(/.{1,4}/g)?.join('-') || code
-        conn.logger.info(`Code Pairing Anda: ${code}`)
-    }, 3000)
-}
 process.on('uncaughtException', console.error)
 
 conn.ev.on("connection.update", async (update) => {
