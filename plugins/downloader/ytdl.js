@@ -1,6 +1,5 @@
 import axios from "axios";
 import api from "#izumi/api";
-
 let Izumi = async (m, {
     conn,
     text,
@@ -18,58 +17,27 @@ let Izumi = async (m, {
                     url: link,
                     format: f
                 };
-                let resp = await (await api.get('/downloader/youtube', { params })).data
-
+                let resp = await api.get('/downloader/youtube', { params, type: 'result' })
+                const thx = `🇻🇪 Done Downloader Youtube
+> *(+)* Fixed From ${resp.baseURL}`
                 const yt = resp.result;
-                const capy = Func.Styles(`. .╭── ︿︿︿︿︿ 🎥   .   .   .   .   . 
-. .┊ ‹‹ *Title* :: ${yt?.title || ""}
-. .┊•*⁀➷ °... ℛᥱᥲᴅ ᴛʜι᥉ ... 🎥
-. .╰─── ︶︶︶︶ ♡⃕  ⌇. . .
- . . ┊⿻ [ *Channel* :: ${yt?.author?.name || ""}] . .
- . . ┊⿻ [ *VideoId* :: ${yt?.videoId || ""}] . .
- . . ┊⿻ [ *Duration* :: ${yt?.duration?.timestamp || ""}] . .
- . . ┊⿻ [ *Link* :: ${yt?.url || ""}] . .
- . . ╰─────────╮`)
-
-                const reply = await conn.sendMessage(m.chat, {
-                    text: capy,
-                    contextInfo: {
-                        forwardingScore: 1,
-                        isForwarded: true,
-                        forwardedNewsletterMessageInfo: {
-                            newsletterJid: saluran,
-                            serverMessageId: 103,
-                            newsletterName: botname
-                        },
-                        externalAdReply: {
-                            title: yt.title,
-                            body: yt.author.channelTitle,
-                            mediaType: 1,
-                            thumbnailUrl: yt.thumbnail,
-                            sourceUrl: global.web,
-                            renderLargerThumbnail: true
-                        }
-                    }
-                }, {
-                    quoted: m
-                });
-
                 const buffer = await axios.get(yt.download, { responseType: 'arraybuffer' });
-                if (buffer.data.length > 1024 * 1024 * 10) {
+                if (buffer.data.length > 1024 * 1024 * 30) {
                     await conn.sendMessage(m.chat, {
                         document: buffer.data,
-                        fileName: yt.title + '.mp4',
+                        fileName: encodeURIComponent(yt.title) + '.mp4',
                         mimetype: 'video/mp4',
-                        caption: "✅Done"
+                        caption: thx
                     }, {
-                        quoted: reply
+                        quoted: m
                     });
                 } else {
+                    const resc = await con.converter(buffer.data, 'webp', 'mp4')
                     await conn.sendMessage(m.chat, {
                         video: buffer.data,
-                        caption: "✅Done"
+                        caption: thx
                     }, {
-                        quoted: reply
+                        quoted: m
                     });
                 }
             }
@@ -80,59 +48,28 @@ let Izumi = async (m, {
                     url: text,
                     format: 'mp3'
                 };
-                let resp = await (await api.get('/downloader/youtube', { params })).data
-
+                let resp = await api.get('/downloader/youtube', { params, type: 'result' })
+                const thx = `🇻🇪 Done Downloader Youtube
+> *(+)* Fixed From ${resp.baseURL}`
                 const yt = resp.result;
-                const capy = Func.Styles(`. .╭── ︿︿︿︿︿ 🎧   .   .   .   .   . 
-. .┊ ‹‹ *Title* :: ${yt?.title || ""}
-. .┊•*⁀➷ °... ℛᥱᥲᴅ ᴛʜι᥉ ... 🎧
-. .╰─── ︶︶︶︶ ♡⃕  ⌇. . .
- . . ┊⿻ [ *Channel* :: ${yt?.author?.name || ""}] . .
- . . ┊⿻ [ *VideoId* :: ${yt?.videoId || ""}] . .
- . . ┊⿻ [ *Duration* :: ${yt?.duration?.timestamp || ""}] . .
- . . ┊⿻ [ *Link* :: ${yt?.url || ""}] . .
- . . ╰─────────╮`)
-
-                const reply = await conn.sendMessage(m.chat, {
-                    text: capy,
-                    contextInfo: {
-                        forwardingScore: 1,
-                        isForwarded: true,
-                        forwardedNewsletterMessageInfo: {
-                            newsletterJid: saluran,
-                            serverMessageId: 103,
-                            newsletterName: botname
-                        },
-                        externalAdReply: {
-                            title: yt.title,
-                            body: yt.author.channelTitle,
-                            mediaType: 1,
-                            thumbnailUrl: yt.thumbnail,
-                            sourceUrl: global.web,
-                            renderLargerThumbnail: true
-                        }
-                    }
-                }, {
-                    quoted: m
-                });
-
                 const buffer = await axios.get(yt.download, { responseType: 'arraybuffer' });
                 if (buffer.data.length > 1024 * 1024 * 100) {
                     await conn.sendMessage(m.chat, {
                         document: buffer.data,
-                        fileName: yt.title + '.mp3',
+                        fileName: encodeURIComponent(yt.title) + '.mp3',
                         mimetype: 'audio/mpeg',
-                        caption: "✅Done"
+                        caption: thx
                     }, {
-                        quoted: reply
+                        quoted: m
                     });
                 } else {
-                    await conn.sendMessage(m.chat, {
+                    const reply = await conn.sendMessage(m.chat, {
                         audio: buffer.data,
                         mimetype: 'audio/mpeg'
                     }, {
-                        quoted: reply
+                        quoted: m
                     });
+                    conn.reply(m.chat, thx, reply)
                 }
             }
             break;
@@ -142,9 +79,7 @@ let Izumi = async (m, {
         console.error('Error', e);
     };
 };
-
 Izumi.command = Izumi.help = ["ytmp4", "ytmp3"];
 Izumi.tags = ["downloader"];
 Izumi.limit = true;
-
 export default Izumi;
