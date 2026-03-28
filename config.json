@@ -20,7 +20,9 @@
         "token": ["Your_token"]
     },
     "apikey": {
-        "izumi": "https://api.ootaizumi.web.id"
+        "izumi": "https://api.ootaizumi.web.id",
+        "varhad": "https://api-varhad.my.id",
+        "zen": "https://api.zenzxz.my.id"
     },
     "web": "https://api.ootaizumi.web.id/"
 }
