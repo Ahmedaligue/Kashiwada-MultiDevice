@@ -1,19 +1,19 @@
 {
-    "botname": "Kashiwada-MultiDevice",
+    "botname": "SENKU BOT",
     "link": {
-        "group": "https://chat.whatsapp.com/JyeT1hdCPJeLy95tzx5eyI",
-        "saluran": "https://whatsapp.com/channel/0029VbAQBR6CxoAow9hLZ13Z"
+        "group": "ttps://chat.whatsapp.com/BgWBbwkJAc1BiD2fcJqp4B",
+        "saluran": "https://whatsapp.com/channel/0029Vb6YJqq0lwgzYNWVN21u"
     },
     "id": {
-        "saluran": "120363423286058962@newsletter",
+        "saluran": "120363405848897016@newsletter",
         "group": ""
     },
-    "ownername": "Keigo / izuku_mii",
-    "owner": ["Your_Number"],
-    "thumbnailUrl": "https://raw.githubusercontent.com/Leoojon/dat1/main/uploads/25eb4e-1767859162744.jpg",
+    "ownername": "ahmed aligue",
+    "owner": ["212625457341"],
+    "thumbnailUrl": "https://telegra.ph/file/7eaa19b36e5f61f34ef3a.jpg",
     "audioUrl": "https://h.top4top.io/m_3622t3r7l1.mp3",
-    "pairing": "izukumii",
-    "nomor": "628_Number-Bot",
+    "pairing": "AAAAAAAA",
+    "nomor": "2126218217923",
     "tz": "Asia/Jakarta",
     "git": {
         "name": ["Your_owner"],
